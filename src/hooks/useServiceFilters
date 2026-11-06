@@ -1,0 +1,24 @@
+```jsx
+import { useState } from "react";
+
+export default function useServiceFilters(services) {
+  const [query, setQuery] = useState("");
+
+  const normalizedQuery = query.trim().toLocaleLowerCase("uk");
+
+  const visibleServices = services.filter((service) =>
+    service.name.toLocaleLowerCase("uk").includes(normalizedQuery)
+  );
+
+  function resetFilters() {
+    setQuery("");
+  }
+
+  return {
+    query,
+    setQuery,
+    visibleServices,
+    resetFilters
+  };
+}
+```
