@@ -1,11 +1,9 @@
 import { validateBooking } from "../domain/bookingValidation.js";
-import { getServiceById } from "../data/services.js";
 import { ServiceError } from "./ServiceError.js";
 const fields = ["clientName", "phone", "serviceId", "date", "time", "notes"];
 export function toBookingInput(input) {
   const value = Object.fromEntries(fields.map(key => [key, String(input?.[key] ?? "").trim()]));
   const errors = validateBooking(value);
-  if (!getServiceById(value.serviceId)) errors.serviceId = "Оберіть наявну послугу.";
   if (Object.keys(errors).length) throw new ServiceError("Перевірте поля запису.", { code: "VALIDATION", errors });
   return value;
 }

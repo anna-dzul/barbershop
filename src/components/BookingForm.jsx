@@ -28,6 +28,8 @@ export default function BookingForm({ initialValues = emptyDraft, submitLabel = 
     const nextErrors = validateBooking(draft);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
+      const first = Object.keys(nextErrors)[0];
+      event.currentTarget.elements.namedItem(first)?.focus();
       setFormError("Перевірте поля, позначені повідомленнями про помилки. Введені дані збережено у формі.");
       return;
     }
@@ -36,7 +38,9 @@ export default function BookingForm({ initialValues = emptyDraft, submitLabel = 
     setFormError("");
     try {
     const result = await onSubmit({
-      ...draft,
+      serviceId: draft.serviceId,
+      date: draft.date,
+      time: draft.time,
       clientName: draft.clientName.trim(),
       phone: draft.phone.trim(),
       notes: draft.notes.trim()
@@ -58,7 +62,7 @@ export default function BookingForm({ initialValues = emptyDraft, submitLabel = 
   }
 
   return (
-    <form className="booking-form" onSubmit={handleSubmit} aria-busy={isSubmitting} noValidate>
+    <form aria-label="Форма запису" className="booking-form" onSubmit={handleSubmit} aria-busy={isSubmitting} noValidate>
       {formError && <p className="form-error" role="alert">{formError}</p>}
       <fieldset disabled={isSubmitting} style={{ border: 0, padding: 0, margin: 0 }}><legend className="muted">Дані запису</legend>
       <div className="form-grid">
